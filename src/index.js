@@ -1,29 +1,32 @@
-module.exports = function solveSudoku(matrix) {
-        for (var row = 0; row < 9; row++) {
-            for (var col = 0; col < 9; col++) {
-                //need to find 0
-                if (matrix[row][col] == 0) {
-                    //need to check which number can match
-                    for (var number = 1; number <= 9; number++) {
-                        if (isSatisfy(row, col, number, matrix)) {
-                            matrix[row][col] = number;
+module.exports =
+    function solveSudoku(matrix) {
+    solve(matrix);
+    return matrix; // return sudoku
+}
+function solve(matrix){
+    for (var row = 0; row < 9; row++) {
+        for (var col = 0; col < 9; col++) {
+            //need to find 0
+            if (matrix[row][col] == 0) {
+                //need to check which number can match
+                for (var number = 1; number <= 9; number++) {
+                    if (isSatisfy(row, col, number, matrix)) {
+                        matrix[row][col] = number;
 
-                            if (solveSudoku(matrix)) {
-                                return true;
-                            } else {
-                                matrix[row][col] = 0;
-                            }
+                        if (solve(matrix)) {
+                            return true;
                         }
+                         else {
+                             matrix[row][col] = 0;
+                         }
                     }
-
-                    return false;
                 }
+                return false;
             }
         }
-
-        return matrix; // return sudoku
+    }
+    return true; // sudoku solved
 }
-
 //need to check if our number is already presented in the row
 function isNumberInRow(row, number, matrix) {
     for (var i = 0; i < 9; i++) {
@@ -57,4 +60,3 @@ function isInSquare(row, col, number, matrix) {
 function isSatisfy(row, col, number, matrix) {
     return !isNumberInRow(row, number, matrix)  &&  !isNumberInColumn(col, number, matrix)  &&  !isInSquare(row, col, number, matrix);
 }
-
